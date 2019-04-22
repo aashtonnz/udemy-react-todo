@@ -19,14 +19,14 @@ const todo = (props) => {
         setTodoList(todos);
       })
       .catch(console.log);
-  });
+  }, []);
 
   const inputChangeHandler = (event) => {
     setTodoName(event.target.value);
   };
 
   const todoAddHandler = () => {
-    setTodoList(todoList.concat(todoName));
+    setTodoList(todoList.concat({ name: todoName }));
     setTodoName('');
     axios.post('https://todo-f81e0.firebaseio.com/todo.json', { name: todoName })
       .then(console.log)
@@ -41,7 +41,7 @@ const todo = (props) => {
       onChange={inputChangeHandler} />
     <button onClick={todoAddHandler}>Add</button>
     <ul>
-      {todoList.map((todo, index) => <li key={todo.id}>{todo.name}</li>)}
+      {todoList.map((todo, index) => <li key={index}>{todo.name}</li>)}
     </ul>
   </React.Fragment>
 };
