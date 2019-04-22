@@ -21,6 +21,18 @@ const todo = (props) => {
       .catch(console.log);
   }, []);
 
+  useEffect(() => {
+    document.addEventListener('mousemove', mouseMoveHandler);
+    // Return clean up function
+    return () => {
+      document.removeEventListener('mousemove', mouseMoveHandler);
+    };
+  }, []);
+
+  const mouseMoveHandler = (event) => {
+    console.log(event.clientX, event.clientY);
+  };
+
   const inputChangeHandler = (event) => {
     setTodoName(event.target.value);
   };
