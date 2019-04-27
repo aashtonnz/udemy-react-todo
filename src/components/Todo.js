@@ -14,7 +14,7 @@ const todo = (props) => {
       case 'SET':
         return action.payload;
       case 'REMOVE':
-        return state.filter((todo) => todo.id !== action.payload.id);
+        return state.filter((todo) => todo.id !== action.id);
       default:
         return state;
     }
@@ -65,6 +65,14 @@ const todo = (props) => {
       .catch(console.log);
   };
 
+  const todoRemoveHandler = (id) => {
+    axios.delete(`https://todo-f81e0.firebaseio.com/todo/${id}.json`)
+      .then(_res => {
+        dispatch({ type: 'REMOVE', id });
+      })
+      .catch(console.log);
+  };
+
   return <React.Fragment>
     <input
       type="text"
@@ -73,7 +81,13 @@ const todo = (props) => {
       onChange={inputChangeHandler} />
     <button onClick={todoAddHandler}>Add</button>
     <ul>
-      {todoList.map((todo) => <li key={todo.id}>{todo.name}</li>)}
+      {todoList.map((todo) => (
+        <li
+          key={todo.id}
+          onClick={todoRemoveHandler.bind(this, todo.id)}>
+          {todo.name}
+        </li>
+      ))}
     </ul>
   </React.Fragment>
 };
