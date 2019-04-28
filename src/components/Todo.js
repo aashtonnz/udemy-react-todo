@@ -54,10 +54,11 @@ const todo = (props) => {
   };
 
   const todoAddHandler = () => {
-    const todo = { id: Date.now(), name: todoName };
+    const todo = { name: todoName };
     axios.post('https://todo-f81e0.firebaseio.com/todo.json', todo)
       .then((response) => {
         console.log(response); 
+        todo.id = response.data.name;
         // setTodoList(todoList.concat(todo));
         dispatch({ type: 'ADD', payload: todo });
         setTodoName('');
