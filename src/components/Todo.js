@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useRef } from 'react';
 import axios from 'axios';
 
 const todo = (props) => {
-  const [todoName, setTodoName] = useState('');
+  // const [todoName, setTodoName] = useState('');
   // const [todoList, setTodoList] = useState([]);
   // Could also use single state eg:
   // const [todoData, setTodoData] = useState({ name: '', list: [] });
+  const todoInputRef = useRef();
 
   const todoListReducer = (state, action) => {
     switch (action.type) {
@@ -28,7 +29,7 @@ const todo = (props) => {
         const todoData = response.data;
         const todos = [];
         for (const key in todoData) {
-          todos.push({ id: todoData[key].id, name: todoData[key].name });
+          todos.push({ id: key, name: todoData[key].name });
         }
         // setTodoList(todos);
         dispatch({ type: 'SET', payload: todos });
@@ -49,19 +50,18 @@ const todo = (props) => {
     console.log(event.clientX, event.clientY);
   };
 
-  const inputChangeHandler = (event) => {
-    setTodoName(event.target.value);
-  };
+  // const inputChangeHandler = (event) => {
+  //   setTodoName(event.target.value);
+  // };
 
   const todoAddHandler = () => {
-    const todo = { name: todoName };
+    const todo = { name: todoInputRef.current.value };
     axios.post('https://todo-f81e0.firebaseio.com/todo.json', todo)
       .then((response) => {
         console.log(response); 
         todo.id = response.data.name;
         // setTodoList(todoList.concat(todo));
         dispatch({ type: 'ADD', payload: todo });
-        setTodoName('');
       })
       .catch(console.log);
   };
@@ -78,8 +78,9 @@ const todo = (props) => {
     <input
       type="text"
       placeholder="Todo"
-      value={todoName}
-      onChange={inputChangeHandler} />
+      // value={todoName}
+      // onChange={inputChangeHandler} />
+      ref={todoInputRef} />
     <button onClick={todoAddHandler}>Add</button>
     <ul>
       {todoList.map((todo) => (
