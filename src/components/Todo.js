@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useRef } from 'react';
+import React, { useState, useEffect, useReducer, useRef, useMemo } from 'react';
 import axios from 'axios';
 
 import List from './List';
@@ -61,7 +61,7 @@ const todo = (props) => {
     const todo = { name: todoInputRef.current.value };
     axios.post('https://todo-f81e0.firebaseio.com/todo.json', todo)
       .then((response) => {
-        console.log(response); 
+        console.log(response);
         todo.id = response.data.name;
         // setTodoList(todoList.concat(todo));
         dispatch({ type: 'ADD', payload: todo });
@@ -92,7 +92,11 @@ const todo = (props) => {
       style={{ backgroundColor: inputIsValid ? 'transparent' : 'red' }} />
     <button onClick={todoAddHandler}>Add</button>
     <ul>
-      <List items={todoList} onClick={todoRemoveHandler} />
+      {
+        useMemo(() => (
+          <List items={todoList} onClick={todoRemoveHandler} />
+        ), [todoList])
+      }
     </ul>
   </React.Fragment>
 };
